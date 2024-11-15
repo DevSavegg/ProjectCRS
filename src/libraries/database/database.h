@@ -13,11 +13,13 @@ Record fetchRecord(char[255], char[255], int*);
 void fetch(char[255], char[255],  int, char[255], int*);
 
 void push(char[255],Record);
+void ipush(char[255], Record);
 
 void del(char[255],char[255],int *);
 void update(char[255], char[255], int,void*, int*);
 
 Record make_record(char[255], char[255], ...);
+Record imake_record(char[255], ...);
 
 void printRecord(Record);
 void printTBL(char[255]);
