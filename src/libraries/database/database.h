@@ -1,7 +1,11 @@
 #ifndef DATABASE_H
 #define DATABASE_H
-#include <stdarg.h>
 
+#include <stdarg.h>
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include <errno.h>
 typedef struct {
     char id[255];
     char data[500][255];

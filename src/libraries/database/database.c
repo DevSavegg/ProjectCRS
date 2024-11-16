@@ -1,8 +1,5 @@
 #include "database.h"
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
-#include <errno.h>
+
 Record fetchRecord(char fileName[255], char id[255], int *status){
     FILE* file = fopen(fileName, "rb");
     *status = -1;

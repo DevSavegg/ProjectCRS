@@ -1,7 +1,7 @@
 #ifndef CORE_H
 #define CORE_H
 
-#include "../../libraries/database/database.h"
+#include "../register/register.h"
 
 void initialize(void);
 
