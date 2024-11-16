@@ -1,6 +1,7 @@
 #include "database.h"
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 #include <errno.h>
 Record fetchRecord(char fileName[255], char id[255], int *status){
     FILE* file = fopen(fileName, "rb");
@@ -64,16 +65,13 @@ void push(char fileName[255], Record record){
         }
     }
 
-    // If the record wasn't found, append the new record
     if (!found) {
         fwrite(&record, sizeof(Record), 1, tempFile);
     }
 
-    // Close the files properly
     fclose(file);
     fclose(tempFile);
 
-    // Remove the original file and rename the temporary file
     if (remove(fileName) != 0) {
         perror("Error removing original file");
         return;
@@ -167,12 +165,33 @@ Record make_record(char id[255], char format[255], ...){
     return record;
 }
 
+Record imake_record(char format[255], ...){
+    va_list args;
+    va_start(args, format);
+    Record record;
+
+    int i = 0;
+    for (; format[i] != '\0'; i++) {
+        if (format[i] == 's') {
+            strcpy(record.data[i], va_arg(args, char*));
+        } else if (format[i] == 'd') {
+            sprintf(record.data[i], "%d", va_arg(args, int));
+        } else if (format[i] == 'f') {
+            sprintf(record.data[i], "%lf", va_arg(args, double));
+        } else if (format[i] == 'L') {
+            sprintf(record.data[i], "%ld", va_arg(args, long int));
+        }
+    }
+    record.size = i;
+    va_end(args);
+    return record;
+}
 
 void printRecord(Record record){
     int i;
-    printf("%25s|", record.id);
+    printf("%10s|", record.id);
     for(i = 0; i < record.size; i++){
-        printf("%25s|", record.data[i]);
+        printf("%10s|", record.data[i]);
     }
     printf("\n");
 }
@@ -187,13 +206,13 @@ void printTBL(char fileName[255]){
         return;
     }
     fread(&rec, sizeof(Record), 1, file);
-    for(i = 0; i <= rec.size; i++) printf("%25d", i);
+    for(i = 0; i <= rec.size; i++) printf("%10d", i);
     printf("\n");
     printRecord(rec);
     while(fread(&rec, sizeof(Record), 1, file) == 1){
         printRecord(rec);
     }
-    for(i = 0; i <= rec.size; i++) printf("-------------------------");
+    for(i = 0; i <= rec.size; i++) printf("-----------");
     printf("\n");
     fclose(file);
 }
@@ -230,5 +249,31 @@ void foreach(void (*funcName)(Record), char fileName[255]){
     while(fread(&rec, sizeof(Record), 1, file) == 1){
         funcName(rec);
     }
+    fclose(file);
+}
+
+
+void ipush(char fileName[255], Record record){
+    FILE *file = fopen(fileName, "rb");
+    Record lastRec;
+    int id = 0;
+
+    if (file != NULL) {
+        while (fread(&lastRec, sizeof(Record), 1, file) == 1);
+        if (feof(file)) {
+            id = atoi(lastRec.id);
+            
+        }
+        fclose(file);
+    }
+    id++;
+    Record toadd = record;
+    sprintf(toadd.id, "%d", id);
+    file = fopen(fileName, "ab");
+    if (file == NULL) {
+        perror("Unable to open file for appending");
+        return;
+    }
+    fwrite(&toadd, sizeof(Record), 1, file);
     fclose(file);
 }
