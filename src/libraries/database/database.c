@@ -5,6 +5,7 @@
 #include <errno.h>
 Record fetchRecord(char fileName[255], char id[255], int *status){
     FILE* file = fopen(fileName, "rb");
+    *status = -1;
     Record record;
     if (file == NULL) {
         printf("Unable to open file %s\n", fileName);
@@ -25,13 +26,13 @@ Record fetchRecord(char fileName[255], char id[255], int *status){
     return (Record){"NULLRECORD", {{"NULL"}}};
 }
 void fetch(char fileName[255], char id[255],  int attributeCol, char result[255], int *status){
-    Record record;
-    fetchRecord(fileName, id, status);
-    if(status){
+    Record record = fetchRecord(fileName, id, status);
+    if(*status != 0){
         printf("An error occured\n");
+        printf("status = %d\n", *status);
         return;
     }
-    strcpy(result, record.data[attributeCol-1]);
+    strcpy(result, record.data[attributeCol]);
 }
 
 void push(char fileName[255], Record record){
@@ -108,7 +109,7 @@ void del(char fileName[255], char id[255], int *status){
     rename("tempFile.tmp", fileName);
     *status = 0;
 }
-void update(char fileName[255], char id[255], int dataCol,void *data, int *status){
+void update(char fileName[255], char id[255], int dataCol,char data[255], int *status){
     FILE* file = fopen(fileName, "rb");
     FILE* tempFile = fopen("tempFile.tmp", "wb");
     Record reading;
@@ -123,7 +124,7 @@ void update(char fileName[255], char id[255], int dataCol,void *data, int *statu
 
     while(fread(&reading, sizeof(Record), 1, file) == 1){
         if(strcmp(id, reading.id) == 0){
-            strcpy(reading.data[dataCol], (char*)data);
+            strcpy(reading.data[dataCol], data);
             found = 1;
             fwrite(&reading, sizeof(Record), 1, tempFile);
             *status = 0;
