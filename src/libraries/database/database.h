@@ -1,7 +1,11 @@
 #ifndef DATABASE_H
 #define DATABASE_H
-#include <stdarg.h>
 
+#include <stdarg.h>
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include <errno.h>
 typedef struct {
     char id[255];
     char data[500][255];
@@ -19,7 +23,7 @@ void del(char[255],char[255],int *);
 void update(char[255], char[255], int,void*, int*);
 
 Record make_record(char[255], char[255], ...);
-Record imake_record(char[255], char[255], ...);
+Record imake_record(char[255], ...);
 
 void printRecord(Record);
 void printTBL(char[255]);
