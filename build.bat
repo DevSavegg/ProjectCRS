@@ -4,7 +4,7 @@ set GCC=gcc
 
 REM Define directories
 set SRC_DIR=src/libraries
-set OBJ_DIR=obj
+set OBJ_DIR=src/obj
 
 REM Create the object directory if it doesn't exist
 if not exist %OBJ_DIR% mkdir %OBJ_DIR%

@@ -1,6 +1,11 @@
 #ifndef REGISTER_H
 #define REGISTER_H
 
+#define DATA_CITIZEN "src/data/Citizens.dat"
+#define DATA_ADDRESS "src/data/Addresses.dat"
+#define DATA_CONTACT "src/data/Contacts.dat"
+#define DATA_CRIME "src/data/Crimes.dat"
+
 #include "../database/database.h"
 
 typedef struct {
@@ -39,5 +44,8 @@ int registerCitizen(char[21], char[21], char[14], Date, Address, Contact);
 Date make_date(int, char[11], int);
 Address make_address(char[11], char[51], char[51], char[51], char[11]);
 Contact make_contact(char[11], char[51]);
+Citizen make_citizen(char[21], char[21], char[14], Date, Address, Contact);
+
+void load_citizens_from_csv(const char*);
 
 #endif

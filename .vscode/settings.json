@@ -1,0 +1,6 @@
+{
+    "files.associations": {
+        "reporter.h": "c",
+        "register.h": "c"
+    }
+}

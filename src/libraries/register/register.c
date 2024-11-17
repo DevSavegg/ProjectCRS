@@ -1,11 +1,5 @@
 #include "register.h"
 
-#define DATA_CITIZEN "Citizens.dat"
-#define DATA_ADDRESS "Addresses.dat"
-#define DATA_CONTACT "Contacts.dat"
-#define DATA_CRIME "Crimes.dat"
-
-
 /*
 
 - Database structure -
@@ -14,7 +8,7 @@ name, surname, id, dateOfBirth, address_id, contact_id
 
 */
 
-// Private Functions
+// Private Functions //
 
 void concatDate(char *buffer, Date date) {
     sprintf(buffer, "%d/%s/%d", date.date, date.month, date.year);
@@ -22,7 +16,7 @@ void concatDate(char *buffer, Date date) {
     return;
 }
 
-// Library Functions
+// Library Functions //
 
 int registerCitizen(char name[21], char surname[21], char ID[14], Date dateOfBirth, Address address, Contact contact) {
     char date_buffer[18] = {0};
@@ -119,4 +113,63 @@ Contact make_contact(char phone[11], char email[51]) {
     }
 
     return contact_obj;
+}
+
+Citizen make_citizen(char name[21], char surname[21], char id[14], Date dateOfBirth, Address address, Contact contact) {
+    Citizen citizen_obj = {
+        .name = "-",
+        .surname = "-",
+        .citizenID = "-"
+    };
+
+    if (name != NULL && name[0] != '\0') {
+        strcpy(citizen_obj.name, name);
+    }
+    
+    if (surname != NULL && surname[0] != '\0') {
+        strcpy(citizen_obj.surname, surname);
+    }
+
+    if (id != NULL && id[0] != '\0') {
+        strcpy(citizen_obj.citizenID, id);
+    }
+
+    citizen_obj.dateOfBirth = dateOfBirth;
+    citizen_obj.address = address;
+    citizen_obj.contact = contact;
+
+    return citizen_obj;
+}
+
+void load_citizens_from_csv(const char *filename) {
+    FILE *file = fopen(filename, "r");
+    if (!file) {
+        perror("Unable to open file");
+        return;
+    }
+
+    char line[512];
+    fgets(line, sizeof(line), file); // Skip header
+
+    while (fgets(line, sizeof(line), file)) {
+        char name[21], surname[21], citizenID[14];
+        int date, year;
+        char month[11];
+        char houseNo[11], street[51], city[51], province[51], postcode[11];
+        char phone[11], email[51];
+
+        sscanf(line, "%20[^,],%20[^,],%13[^,],%d,%10[^,],%d,%10[^,],%50[^,],%50[^,],%50[^,],%10[^,],%10[^,],%50[^\n]",
+               name, surname, citizenID,
+               &date, month, &year,
+               houseNo, street, city, province, postcode,
+               phone, email);
+
+        Date dob = make_date(date, month, year);
+        Address addr = make_address(houseNo, street, city, province, postcode);
+        Contact contact = make_contact(phone, email);
+
+        registerCitizen(name, surname, citizenID, dob, addr, contact);
+    }
+
+    fclose(file);
 }
