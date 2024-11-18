@@ -57,6 +57,7 @@ Record fastFetchRecord(char fileName[255], int id, int*status){
 
         *status = 0;
     }
+    fclose(file);
     return rec;
 }
 
