@@ -314,3 +314,18 @@ void ipush(char fileName[255], Record record){
     fwrite(&toadd, sizeof(Record), 1, file);
     fclose(file);
 }
+
+void unsafePush(char fileName[255], Record record){
+    FILE *file = fopen(fileName, "rb");
+    Record lastRec;
+    int id = record_size(fileName) + 1;
+    Record toadd = record;
+    sprintf(toadd.id, "%d", id);
+    file = fopen(fileName, "ab");
+    if (file == NULL) {
+        perror("Unable to open file for appending");
+        return;
+    }
+    fwrite(&toadd, sizeof(Record), 1, file);
+    fclose(file);
+}
