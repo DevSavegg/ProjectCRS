@@ -5,6 +5,28 @@ void initialize() {
 
     // load_citizens_from_csv("citizens.csv");
 
+    // registerCitizen(
+    //     "Naphon",
+    //     "Janggerd",
+    //     "1109945622878",
+    //     make_date(
+    //         1,
+    //         "December",
+    //         2024
+    //     ),
+    //     make_address(
+    //         "10",
+    //         "Prachauthit",
+    //         "Banna",
+    //         "Chaina",
+    //         "30400"
+    //     ),
+    //     make_contact(
+    //         "01234567",
+    //         "thewhalezaza900@gmail.com"
+    //     )
+    // );
+
     // puts("Successfully saved data.");
 
     // printCitizenInfo("1");
@@ -12,7 +34,14 @@ void initialize() {
     // printCitizenInfo("29");
     // printCitizenInfo("200");
     // printCitizenInfo("1000");
-    printCitizenInfo("2500");
+    // printCitizenInfo("2500");
+    Citizen nigga[1000];
+    int n;
+    n = fetchByCitizenId(nigga, "1109945622878");
+
+    for (int i = 0; i < n; i++) {
+        puts(nigga[i].surname);
+    }
 }
 
 /*

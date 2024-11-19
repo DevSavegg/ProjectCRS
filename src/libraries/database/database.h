@@ -18,9 +18,9 @@ Record fetchRecord(char[255], char[255], int*);
 void fetch(char[255], char[255],  int, char[255], int*);
 Record fastFetchRecord(char[255], int, int*);
 
-
 void push(char[255],Record);
 void ipush(char[255], Record);
+void unsafePush(char[255], Record); // DO NOT USE
 
 void del(char[255],char[255],int *);
 void update(char[255], char[255], int,char[255], int*);

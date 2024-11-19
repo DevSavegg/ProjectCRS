@@ -39,6 +39,11 @@ typedef struct {
     Contact contact;
 } Citizen;
 
+#define NULLDATE (Date){-1, "NULL", -1}
+#define NULLADDRESS (Address){"NULL", "NULL", "NULL", "NULL", "NULL"}
+#define NULLCONTACT (Contact){"NULL", "NULL"}
+#define NULLCITIZEN (Citizen){"-", "-", "-", NULLDATE, NULLADDRESS}
+
 int registerCitizen(char[21], char[21], char[14], Date, Address, Contact);
 
 Date make_date(int, char[11], int);

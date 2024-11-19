@@ -3,6 +3,7 @@
 
 #include "../register/register.h"
 #include "../reporter/reporter.h"
+#include "../finder/finder.h"
 
 void initialize(void);
 

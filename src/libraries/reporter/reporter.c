@@ -13,7 +13,7 @@ char intToChar(int num) {
 
 void printCitizenInfo(char id[255]) {
     int status = 0;
-    Record citizen_record = fetchRecord(DATA_CITIZEN, id, &status);
+    Record citizen_record = fastFetchRecord(DATA_CITIZEN, atoi(id), &status);
 
     char *address_id, *contact_id;
     Record address_record, contact_record;
@@ -27,7 +27,7 @@ void printCitizenInfo(char id[255]) {
     contact_id = citizen_record.data[5];
 
     if (address_id != NULL) {
-        address_record = fetchRecord(DATA_ADDRESS, address_id, &status);
+        address_record = fastFetchRecord(DATA_ADDRESS, atoi(address_id), &status);
 
         if (status != 0) {
             printf("Error occured while fetching address data.");
@@ -36,7 +36,7 @@ void printCitizenInfo(char id[255]) {
     }
 
     if (address_id != NULL) {
-        contact_record = fetchRecord(DATA_CONTACT, contact_id, &status);
+        contact_record = fastFetchRecord(DATA_CONTACT, atoi(contact_id), &status);
 
         if (status != 0) {
             printf("Error occured while fetching contact data.");
