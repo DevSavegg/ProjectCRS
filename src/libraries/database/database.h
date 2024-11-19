@@ -8,7 +8,7 @@
 #include <errno.h>
 typedef struct {
     char id[255];
-    char data[500][255];
+    char data[50][255];
     int size;
 } Record;
 
