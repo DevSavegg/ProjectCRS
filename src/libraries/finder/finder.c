@@ -75,7 +75,6 @@ Citizen fetchIdFunction(Record rec) {
         int trash;
 
         Record tmp_address, tmp_contact;
-
         tmp_address = fastFetchRecord(DATA_ADDRESS, atoi(rec.data[4]), &trash);
         tmp_contact = fastFetchRecord(DATA_CONTACT, atoi(rec.data[5]), &trash);
 

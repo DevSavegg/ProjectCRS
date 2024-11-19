@@ -23,7 +23,7 @@ Record fetchRecord(char fileName[255], char id[255], int *status){
     return NULLRECORD;
 }
 
-Record fastFetchRecord(char fileName[255], int id, int*status){
+Record fastFetchRecord(char fileName[255], long long int id, int*status){
     FILE* file = fopen(fileName, "rb");
     Record rec;
     *status = -1;
@@ -32,8 +32,10 @@ Record fastFetchRecord(char fileName[255], int id, int*status){
         *status = 1;
         return NULLRECORD;
     }
-    int toMove = id * sizeof(Record), lastID = id, currentLine;
-    while(fseek(file, toMove, SEEK_SET) != 0 && toMove >= 0) toMove = (id--) * sizeof(Record); //If Not found record, read until found
+    long long int toMove = id * sizeof(Record), lastID = id, currentLine;
+    while(fseek(file, toMove, SEEK_SET) != 0 && toMove >= 0) {
+        toMove = (id--) * sizeof(Record);
+    } //If Not found record, read until found
     currentLine = toMove/sizeof(Record);
     if(currentLine < 0){
         printf("File %s is empty.\n", fileName);
@@ -42,11 +44,11 @@ Record fastFetchRecord(char fileName[255], int id, int*status){
     }
     fseek(file, -2 * sizeof(Record), SEEK_CUR);
     fread(&rec, sizeof(Record), 1, file);
-    if(atoi(rec.id) != id){
+    if(atoll(rec.id) != id){
         while(1){
             fread(&rec, sizeof(Record), 1, file);
-            if(atoi(rec.id) == id) break;
-            lastID = atoi(rec.id);
+            if(atoll(rec.id) == id) break;
+            lastID = atoll(rec.id);
             if(lastID < id || lastID-1 < 0){
                 printf("Record is not found.: %d\n", lastID);
                 *status = 2;

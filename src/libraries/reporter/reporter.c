@@ -13,7 +13,7 @@ char intToChar(int num) {
 
 void printCitizenInfo(char id[255]) {
     int status = 0;
-    Record citizen_record = fastFetchRecord(DATA_CITIZEN, atoi(id), &status);
+    Record citizen_record = fastFetchRecord(DATA_CITIZEN, atoll(id), &status);
 
     char *address_id, *contact_id;
     Record address_record, contact_record;

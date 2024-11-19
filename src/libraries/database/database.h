@@ -16,7 +16,7 @@ typedef struct {
 
 Record fetchRecord(char[255], char[255], int*);
 void fetch(char[255], char[255],  int, char[255], int*);
-Record fastFetchRecord(char[255], int, int*);
+Record fastFetchRecord(char[255], long long int, int*);
 
 void push(char[255],Record);
 void ipush(char[255], Record);
