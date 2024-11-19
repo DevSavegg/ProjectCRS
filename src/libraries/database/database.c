@@ -289,6 +289,22 @@ void foreach(void (*funcName)(Record), char fileName[255]){
     fclose(file);
 }
 
+int getLastRecordId(char fileName[255]) {
+    FILE *file = fopen(fileName, "rb");
+    Record lastRec;
+    int id = 0;
+
+    if (file != NULL) {
+        while (fread(&lastRec, sizeof(Record), 1, file) == 1);
+        if (feof(file)) {
+            id = atoi(lastRec.id);
+            
+        }
+        fclose(file);
+    }
+
+    return id;
+}
 
 void ipush(char fileName[255], Record record){
     FILE *file = fopen(fileName, "rb");
@@ -316,12 +332,12 @@ void ipush(char fileName[255], Record record){
 }
 
 void unsafePush(char fileName[255], Record record){
-    FILE *file = fopen(fileName, "rb");
-    Record lastRec;
-    int id = record_size(fileName) + 1;
+    FILE *file = fopen(fileName, "ab");
+    //Record lastRec;
+    //int id = record_size(fileName) + 1;
     Record toadd = record;
-    sprintf(toadd.id, "%d", id);
-    file = fopen(fileName, "ab");
+    //sprintf(toadd.id, "%d", id);
+    //file = fopen(fileName, "ab");
     if (file == NULL) {
         perror("Unable to open file for appending");
         return;

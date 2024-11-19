@@ -141,6 +141,9 @@ Citizen make_citizen(char name[21], char surname[21], char id[14], Date dateOfBi
     return citizen_obj;
 }
 
+// For Initializing Data only.
+// DO NOT use it to add bulk data to already exist database
+// THIS FUNCTION IS UNSAFE, USE AT YOUR OWN RISK
 void load_citizens_from_csv(const char *filename) {
     FILE *file = fopen(filename, "r");
     if (!file) {
@@ -148,7 +151,16 @@ void load_citizens_from_csv(const char *filename) {
         return;
     }
 
+    char date_buffer[18] = {0};
+    int id = record_size(DATA_CITIZEN);
+    char id_char[512];
     char line[512];
+
+    if (id == -1) {
+        puts("Index will start from 1 instead.");
+        id = 1;
+    }
+
     fgets(line, sizeof(line), file); // Skip header
 
     while (fgets(line, sizeof(line), file)) {
@@ -168,7 +180,25 @@ void load_citizens_from_csv(const char *filename) {
         Address addr = make_address(houseNo, street, city, province, postcode);
         Contact contact = make_contact(phone, email);
 
-        registerCitizen(name, surname, citizenID, dob, addr, contact);
+        Record citizen_record, contact_record, address_record;
+
+        concatDate(date_buffer, dob);
+        sprintf(id_char, "%d", id);
+
+        contact_record = make_record(id_char, "ss", contact.phone, contact.email);
+        unsafePush(DATA_CONTACT, contact_record);
+
+        address_record = make_record(id_char, "sssss", addr.houseNo, addr.street, addr.city, addr.province, addr.postcode);
+        unsafePush(DATA_ADDRESS, address_record);
+
+        citizen_record = make_record(id_char, "ssssdd", name, surname, citizenID, date_buffer, id, id);
+        unsafePush(DATA_CITIZEN, citizen_record);
+
+        id++;
+
+        if (id % 1000 == 0) {
+            printf("Register record checkpoint #%d passed.\n", id);
+        }
     }
 
     fclose(file);

@@ -36,4 +36,4 @@ def save_citizens_to_csv(filename, count):
 
 
 # Generate citizens and save to a CSV
-save_citizens_to_csv("citizens.csv", 2500)
+save_citizens_to_csv("citizens.csv", 1000000)

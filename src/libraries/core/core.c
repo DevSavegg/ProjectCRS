@@ -35,13 +35,16 @@ void initialize() {
     // printCitizenInfo("200");
     // printCitizenInfo("1000");
     // printCitizenInfo("2500");
-    Citizen nigga[1000];
-    int n;
-    n = fetchByCitizenId(nigga, "1109945622878");
+    // printCitizenInfo("250000");
+    printCitizenInfo("1000000");
 
-    for (int i = 0; i < n; i++) {
-        puts(nigga[i].surname);
-    }
+    // Citizen nigga[1000];
+    // int n;
+    // n = fetchByCitizenId(nigga, "1109945622878");
+
+    // for (int i = 0; i < n; i++) {
+    //     puts(nigga[i].surname);
+    // }
 }
 
 /*
