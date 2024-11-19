@@ -18,6 +18,8 @@ void printCitizenInfo(char id[255]) {
     char *address_id, *contact_id;
     Record address_record, contact_record;
 
+    //printf("%s %s %s %s %s %s\n", citizen_record.data[0], citizen_record.data[1], citizen_record.data[2], citizen_record.data[3], address_id, contact_id);
+
     if (status != 0) {
         printf("Error occured while fetching citizen data.");
         return;
@@ -27,18 +29,20 @@ void printCitizenInfo(char id[255]) {
     contact_id = citizen_record.data[5];
 
     if (address_id != NULL) {
-        address_record = fastFetchRecord(DATA_ADDRESS, atoi(address_id), &status);
+        address_record = fastFetchRecord(DATA_ADDRESS, atoll(address_id), &status);
 
         if (status != 0) {
+            printf("%d\n", status);
             printf("Error occured while fetching address data.");
             return;
         }
     }
 
     if (address_id != NULL) {
-        contact_record = fastFetchRecord(DATA_CONTACT, atoi(contact_id), &status);
+        contact_record = fastFetchRecord(DATA_CONTACT, atoll(contact_id), &status);
 
         if (status != 0) {
+            printf("%d\n", status);
             printf("Error occured while fetching contact data.");
             return;
         }

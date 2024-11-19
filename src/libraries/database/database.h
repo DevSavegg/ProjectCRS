@@ -28,6 +28,8 @@ void update(char[255], char[255], int,char[255], int*);
 Record make_record(char[255], char[255], ...);
 Record imake_record(char[255], ...);
 
+int getLastRecordId(char[255]);
+
 void printRecord(Record);
 void printTBL(char[255]);
 

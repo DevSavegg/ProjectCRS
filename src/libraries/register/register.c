@@ -185,6 +185,8 @@ void load_citizens_from_csv(const char *filename) {
         concatDate(date_buffer, dob);
         sprintf(id_char, "%d", id);
 
+        //printf("%d, %s\n", id, id_char);
+
         contact_record = make_record(id_char, "ss", contact.phone, contact.email);
         unsafePush(DATA_CONTACT, contact_record);
 
