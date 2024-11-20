@@ -1,6 +1,8 @@
 #include "core.h"
+#include "../ui/gui.h"
 
 void initialize() {
+    GUI();
     //puts("Starting saving data...");
 
     //load_citizens_from_csv("citizens.csv");
@@ -22,17 +24,17 @@ void initialize() {
     //     )
     // );
 
-    reportDivorced("7871011224081");
+    //reportDivorced("7871011224081");
 
-    int count = 0;
-    Citizen test[10];
+    //int count = 0;
+    //Citizen test[10];
 
-    count = fetchByName(test, "Naphon");
+    //count = fetchByName(test, "Naphon");
 
-    for (int i = 0; i < count; i++) {
-        printCitizen(test[i]);
-        puts("");
-    }
+    //for (int i = 0; i < count; i++) {
+    //    printCitizen(test[i]);
+    //    puts("");
+    //}
 
     //reportMarriage("7871011224081", "6971110162228");
 }

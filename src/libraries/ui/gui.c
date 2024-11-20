@@ -4,8 +4,10 @@
 #include <stdlib.h>
 #include <math.h>
 #include <string.h>
+#include <ctype.h>
 #include "..\register\register.h"
 #include "..\reporter\reporter.h"
+#include "..\finder\finder.h"
 
 #define bgcl 0
 #define textcl 4 
@@ -148,6 +150,10 @@ void dissapearscreen(){
 system("cls");
 char lookfor[255];
 prompt(lookfor,"Input ID of a lost person",5);
+reportDisappeared(lookfor);
+Citizen buffer;
+fetchByCitizenID(&buffer,lookfor);
+printCitizen(buffer);
 printWithBackground("press any key to go back to menu...",bgcl,textcl);getche();
 GUI();}
 
@@ -170,7 +176,7 @@ void prompt(char *dest,char question[100],int title){
     if (title == 5 )dissapear();
     char answer[100];
     printf("\n\n");
-printWithBackground(question,0,4);printWithBackground("\n>",0,4);gets(answer); system("cls");strcpy(dest,answer);
+printWithBackground(question,0,4);printWithBackground("\n>",0,4);gets(answer);fflush(stdin); system("cls");strcpy(dest,answer);
 }
 void Marriage(){
     printWithBackground("  __  __              _                    ,d88b.d88b,\n",0,4);
@@ -186,8 +192,8 @@ system("cls");
 char lookfor[255];
 prompt(lookfor,"Input Person ID",4);
 setConsoleColor(4,0);
-   printCitizenInfo(lookfor);
-    setConsoleColor(7,0);
+printCitizenInfo(lookfor);
+setConsoleColor(7,0);
 printWithBackground("press any key to go back to menu...",bgcl,textcl);getche();
 GUI();
 }
@@ -215,17 +221,44 @@ void form(char ID[14],char name[21],char surname[21],char gender[11],char day[3]
     printf("+--------------------------------------------------------+\n");
 
 }
-/*void Birthscreen()
-{
-    char name[21];prompt(name,"Input Name",1);
-   char gender[11];prompt(name,"Input Gender",1);
-   char religion[11];prompt(name,"Input Religion ID",1);
-   char dadid[21];prompt(name,"Input Father ID",1);
-   char momid[21];prompt(name,"Input Father ID",1);
-   reportBirth(dadid,momid,name,gender,religion);
+void strtolower(char string[255]){
+    int i = 0;
+    for(; string[i] != '\0'; i++)
+        if(string[i] >= 'A' && string[i] <= 'Z') string[i] = string[i]-'A'+'a';
+    
+}
 
-}*/
 void Birthscreen()
+{
+    system("cls");
+   char name[21];prompt(name,"Input Name",1);
+   char gender[11];prompt(gender,"Input Gender",1);
+   char day[3];prompt(day,"Input Day",1);
+    int days = atoi(day);
+    char month[11]; prompt(month, "Input Month", 1);
+    int months = atoi(month);
+    char year[5];prompt(year,"Input Year",1);
+    int years = atoi(year);
+char religion[11]; prompt(religion, "Input Religion", 1);
+  strtolower(gender);
+   Gender genders;
+   if (strcmp(gender,"male")==0)genders = MALE;
+   else if (strcmp(gender,"female")==0)genders = FEMALE;
+   else {printf("invalid");getch();}
+    Citizen citizen[2];
+   char dadid[21];prompt(dadid,"Input Father ID",1);
+   char momid[21];prompt(momid,"Input Mother ID",1);
+   printf("%s %s %s %d %s %d %d %d",dadid,momid,name,genders,religion,days,months,years);
+   reportBirth(dadid,momid,name,genders,religion,make_date(days,months,years));
+   int rer = fetchByName(citizen,name);
+   for (int i = 0; i < rer; i++) {
+        printCitizen(citizen[i]);
+        puts("");}
+    printWithBackground("\n\nRegisterd! press any key to go back to menu...",bgcl,textcl);getch();
+  GUI();
+
+}
+/*void Birthscreen()
 {
     system("cls");
    char name[21];
@@ -260,17 +293,25 @@ void Birthscreen()
     printWithBackground("\n\nRegisterd! press any key to go back to menu...",bgcl,textcl);getche();
    
     GUI();
-}  
+}  */
 void Deathscreen(){
     system("cls");
     char ID[14];prompt(ID,"Input Deceased person ID",3);
+    reportDeceased(ID);
+    char buffer[255];
+    fetchRawRecordID(buffer,ID);
+    printCitizenInfo(buffer);
+    printf("%s",ID);
     printWithBackground("\n\nwe are sorry for your loss...press any key to go back to menu...",0,4);getche();
-
     GUI();}
 void Marriagescreen(){
     system("cls");
     char husband[14];prompt(husband,"Input Husband ID",2);
     char wife[14];prompt(wife,"Input Wife ID",2);
+    reportMarriage(husband,wife);
+    Citizen buffer;
+    fetchByCitizenID(&buffer,husband);
+    printCitizen(buffer);
     printWithBackground("\n\nCongratulation on the new couple! press any key to go back to menu...",0,4);getche();
 
     GUI();} 
