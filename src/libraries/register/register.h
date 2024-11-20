@@ -23,16 +23,11 @@ typedef struct {
 } Address;
 
 typedef struct {
-    char phone[11];
-    char email[51];
-} Contact;
-
-typedef struct {
     char name[21];
     char surname[21];
 
     char citizenID[14];
-
+    char gender[7];
     char status[21];
     char personState[21];
 
@@ -43,21 +38,18 @@ typedef struct {
 
     Date dateOfBirth;
     Address address;
-    
-    Contact contact;
+    char spouseID[255];
 } Citizen;
 
 #define NULLDATE (Date){-1, "NULL", -1}
 #define NULLADDRESS (Address){"NULL", "NULL", "NULL", "NULL", "NULL"}
 #define NULLCONTACT (Contact){"NULL", "NULL"}
-#define NULLCITIZEN (Citizen){"-", "-", "-", "-", "-", "-", "-", "-", NULLDATE, NULLADDRESS}
-
-int registerCitizen(char[21], char[21], char[14], Date, Address, Contact);
+#define NULLCITIZEN (Citizen){"-", "-", "-", "-", "-", "-", "-", "-", "-", NULLDATE, NULLADDRESS, "-"}
+int registerCitizen(char[21], char[21], char[14], Date, Address, char[7], char[21], char[21],  char[21], char[255], char[255], char[255]);
 
 Date make_date(int, char[11], int);
 Address make_address(char[11], char[51], char[51], char[51], char[11]);
-Contact make_contact(char[11], char[51]);
-Citizen make_citizen(char[21], char[21], char[14], Date, Address, Contact);
+Citizen make_citizen(char[21], char[21], char[14], Date, Address, char[7], char[21], char[21],  char[21], char[255], char[255], char[255]);
 
 void load_citizens_from_csv(const char*);
 

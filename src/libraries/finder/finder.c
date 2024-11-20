@@ -32,20 +32,21 @@ int finder_foreach(Citizen *dest, Citizen (*funcName)(Record), char fileName[255
     return count;
 }
 
+//Citizen make_citizen(char name[21], char surname[21], char id[14], Date dateOfBirth, Address address, char gender[7], char status[21], char personState[21],  char religion[21], char fatherRecordID[255], char motherRecordID[255])
+
 Citizen fetchNameFunction(Record rec) {
     // printf("%s %s \n", rec.data[0], temp_name);
     if (strcmp(rec.data[0], temp_name) == 0) {
         int trash;
 
-        Record tmp_address, tmp_contact;
+        Record tmp_address;
 
-        tmp_address = fastFetchRecord(DATA_ADDRESS, atoi(rec.data[4]), &trash);
-        tmp_contact = fastFetchRecord(DATA_CONTACT, atoi(rec.data[5]), &trash);
+        tmp_address = fastFetchRecord(DATA_ADDRESS, atoi(rec.data[9]), &trash);
 
         int d, y;
         char m[11];
 
-        sscanf(rec.data[3], "%d/%s/%d", &d, m, &y);
+        sscanf(rec.data[8], "%d/%s/%d", &d, m, &y);
 
         return make_citizen(
             rec.data[0],
@@ -59,10 +60,13 @@ Citizen fetchNameFunction(Record rec) {
                 tmp_address.data[3],
                 tmp_address.data[4]
             ),
-            make_contact(
-                tmp_contact.data[0],
-                tmp_contact.data[1]
-            )
+            rec.data[10],
+            rec.data[3],
+            rec.data[4],
+            rec.data[5],
+            rec.data[6],
+            rec.data[7],
+            rec.data[11]
         );
     } else {
         return NULLCITIZEN;
@@ -74,14 +78,14 @@ Citizen fetchIdFunction(Record rec) {
     if (strcmp(rec.data[2], temp_id) == 0) {
         int trash;
 
-        Record tmp_address, tmp_contact;
-        tmp_address = fastFetchRecord(DATA_ADDRESS, atoi(rec.data[4]), &trash);
-        tmp_contact = fastFetchRecord(DATA_CONTACT, atoi(rec.data[5]), &trash);
+        Record tmp_address;
+
+        tmp_address = fastFetchRecord(DATA_ADDRESS, atoi(rec.data[9]), &trash);
 
         int d, y;
         char m[11];
 
-        sscanf(rec.data[3], "%d/%s/%d", &d, m, &y);
+        sscanf(rec.data[8], "%d/%s/%d", &d, m, &y);
 
         return make_citizen(
             rec.data[0],
@@ -95,10 +99,13 @@ Citizen fetchIdFunction(Record rec) {
                 tmp_address.data[3],
                 tmp_address.data[4]
             ),
-            make_contact(
-                tmp_contact.data[0],
-                tmp_contact.data[1]
-            )
+            rec.data[10],
+            rec.data[3],
+            rec.data[4],
+            rec.data[5],
+            rec.data[6],
+            rec.data[7],
+            rec.data[11]
         );
     } else {
         return NULLCITIZEN;

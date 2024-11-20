@@ -4,7 +4,7 @@
 
 - Database structure -
 
-name, surname, id, dateOfBirth, address_id, contact_id
+name, surname, id, dateOfBirth, address_id
 
 */
 
@@ -18,23 +18,19 @@ void concatDate(char *buffer, Date date) {
 
 // Library Functions //
 
-int registerCitizen(char name[21], char surname[21], char ID[14], Date dateOfBirth, Address address, Contact contact) {
+int registerCitizen(char name[21], char surname[21], char ID[14], Date dateOfBirth, Address address, char gender[7], char status[21], char personState[21],  char religion[21], char fatherRecordID[255], char motherRecordID[255], char spouseID[255]) {
     char date_buffer[18] = {0};
-    int contact_id, address_id;
+    int address_id;
 
-    Record citizen_record, contact_record, address_record;
+    Record citizen_record, address_record;
 
     concatDate(date_buffer, dateOfBirth);
-
-    contact_record = imake_record("ss", contact.phone, contact.email);
-    ipush(DATA_CONTACT, contact_record);
-    contact_id = record_size(DATA_CONTACT);
 
     address_record = imake_record("sssss", address.houseNo, address.street, address.city, address.province, address.postcode);
     ipush(DATA_ADDRESS, address_record);
     address_id = record_size(DATA_ADDRESS);
 
-    citizen_record = imake_record("ssssdd", name, surname, ID, date_buffer, address_id, contact_id);
+    citizen_record = imake_record("sssssssssdss", name, surname, ID, status, personState, religion, fatherRecordID, motherRecordID, date_buffer, address_id, gender, spouseID);
     ipush(DATA_CITIZEN, citizen_record);
     
     return record_size(DATA_CITIZEN);
@@ -98,24 +94,9 @@ Address make_address(char houseNo[11], char street[51], char city[51], char prov
     return address_obj;
 }
 
-Contact make_contact(char phone[11], char email[51]) {
-    Contact contact_obj = {
-        .phone = "-",
-        .email = "-"
-    };
 
-    if (phone != NULL && phone[0] != '\0') {
-        strcpy(contact_obj.phone, phone);
-    }
 
-    if (email != NULL && email[0] != '\0') {
-        strcpy(contact_obj.email, email);
-    }
-
-    return contact_obj;
-}
-
-Citizen make_citizen(char name[21], char surname[21], char id[14], Date dateOfBirth, Address address, Contact contact) {
+Citizen make_citizen(char name[21], char surname[21], char id[14], Date dateOfBirth, Address address, char gender[7], char status[21], char personState[21],  char religion[21], char fatherRecordID[255], char motherRecordID[255], char spouseID[255]) {
     Citizen citizen_obj = {
         .name = "-",
         .surname = "-",
@@ -136,7 +117,13 @@ Citizen make_citizen(char name[21], char surname[21], char id[14], Date dateOfBi
 
     citizen_obj.dateOfBirth = dateOfBirth;
     citizen_obj.address = address;
-    citizen_obj.contact = contact;
+    strcpy(citizen_obj.gender, gender);
+    strcpy(citizen_obj.status, status);
+    strcpy(citizen_obj.personState, personState);
+    strcpy(citizen_obj.religion, religion);
+    strcpy(citizen_obj.fatherRecordID, fatherRecordID);
+    strcpy(citizen_obj.motherRecordID, motherRecordID);
+    strcpy(citizen_obj.spouseID, spouseID);
 
     return citizen_obj;
 }
@@ -166,36 +153,32 @@ void load_citizens_from_csv(const char *filename) {
     while (fgets(line, sizeof(line), file)) {
         char name[21], surname[21], citizenID[14];
         char status[21], personState[21], religion[21];
-        char fatherID[255], motherID[255];
+        char fatherID[255], motherID[255], spouseID[255];
         int date, year;
         char month[11];
         char houseNo[11], street[51], city[51], province[51], postcode[11];
-        char phone[11], email[51];
+        char gender[7];
 
-        sscanf(line, "%20[^,],%20[^,],%13[^,],%20[^,],%20[^,],%20[^,],%254[^,],%254[^,],%d,%10[^,],%d,%10[^,],%50[^,],%50[^,],%50[^,],%10[^,],%10[^,],%50[^\n]",
+        sscanf(line, "%20[^,],%20[^,],%13[^,],%20[^,],%20[^,],%20[^,],%254[^,],%254[^,],%d,%10[^,],%d,%10[^,],%50[^,],%50[^,],%50[^,],%10[^,],%7[^,],%254[^,]",
                name, surname, citizenID, status, personState, religion, fatherID, motherID,
                &date, month, &year,
                houseNo, street, city, province, postcode,
-               phone, email);
+               gender, spouseID);
 
         Date dob = make_date(date, month, year);
         Address addr = make_address(houseNo, street, city, province, postcode);
-        Contact contact = make_contact(phone, email);
 
-        Record citizen_record, contact_record, address_record;
+        Record citizen_record, address_record;
 
         concatDate(date_buffer, dob);
         sprintf(id_char, "%d", id);
 
         //printf("%d, %s\n", id, id_char);
 
-        contact_record = make_record(id_char, "ss", contact.phone, contact.email);
-        unsafePush(DATA_CONTACT, contact_record);
-
         address_record = make_record(id_char, "sssss", addr.houseNo, addr.street, addr.city, addr.province, addr.postcode);
         unsafePush(DATA_ADDRESS, address_record);
 
-        citizen_record = make_record(id_char, "sssssssssdd", name, surname, citizenID, status, personState, religion, fatherID, motherID, date_buffer, id, id);
+        citizen_record = make_record(id_char, "sssssssssdss", name, surname, citizenID, status, personState, religion, fatherID, motherID, date_buffer, id, gender, spouseID);
         unsafePush(DATA_CITIZEN, citizen_record);
 
         id++;

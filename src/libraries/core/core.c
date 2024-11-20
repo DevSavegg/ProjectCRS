@@ -3,7 +3,7 @@
 void initialize() {
     // puts("Starting saving data...");
 
-    // load_citizens_from_csv("citizens.csv");
+    //load_citizens_from_csv("citizens.csv");
 
     // registerCitizen(
     //     "Naphon",
@@ -34,9 +34,9 @@ void initialize() {
     // printCitizenInfo("29");
     // printCitizenInfo("200");
     // printCitizenInfo("1000");
-    // printCitizenInfo("99999");
+    printCitizenInfo("44444");
 
-    printTBL(DATA_CITIZEN);
+    //printTBL(DATA_CITIZEN);
     //printf("%d", sizeof(Record));
     //printf("%ld", sizeof(long int));
     // Citizen nigga[1000];

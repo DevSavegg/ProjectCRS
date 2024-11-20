@@ -14,6 +14,7 @@ def generate_citizen():
     religion = random.choice(["Christianity", "Islam", "Hinduism", "Buddhism", "Judaism", "Other"])
     fatherID = '-'
     motherID = '-'
+    spid = '-'
     
     date = {
         "date": random.randint(1, 28), 
@@ -27,13 +28,10 @@ def generate_citizen():
         "province": fake.state(),
         "postcode": fake.postcode()
     }
-    contact = {
-        "phone": fake.phone_number()[:10],
-        "email": fake.email()
-    }
+    gender = random.choice(['Male', 'Female'])
     return (
         name, surname, citizenID, status, personState, religion, fatherID, motherID, 
-        date, address, contact
+        date, address, gender, spid
     )
 
 def save_citizens_to_csv(filename, count):
@@ -44,16 +42,16 @@ def save_citizens_to_csv(filename, count):
             "name", "surname", "citizenID", "status", "personState", "religion", 
             "fatherID", "motherID", "date", "month", "year", 
             "houseNo", "street", "city", "province", "postcode", 
-            "phone", "email"
+            "gender","spouseID"
         ])
         for _ in range(count):
             (name, surname, citizenID, status, personState, religion, fatherID, motherID, 
-             date, address, contact) = generate_citizen()
+             date, address, gender, spid) = generate_citizen()
             writer.writerow([
                 name, surname, citizenID, status, personState, religion, fatherID, motherID, 
                 date["date"], date["month"], date["year"], 
                 address["houseNo"], address["street"], address["city"], address["province"], address["postcode"], 
-                contact["phone"], contact["email"]
+                gender, spid
             ])
 
 # Generate 100 citizens and save to a CSV
