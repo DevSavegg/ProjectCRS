@@ -50,3 +50,27 @@ void printCitizenInfo(char id[255]) {
     printf("+--------------------------------------------------------+\n");
 
 }
+
+void printCitizen(Citizen citizen) {
+    printf("Name: %s\n", citizen.name);
+    printf("Surname: %s\n", citizen.surname);
+    printf("Citizen ID: %s\n", citizen.citizenID);
+
+    // Depending on how Gender, Status, PersonState, and Date are defined, 
+    // you will need to print those fields accordingly
+    printf("Gender: %d\n", citizen.gender);  // Example: assuming Gender is an enum or integer
+    printf("Status: %d\n", citizen.status);  // Assuming Status is an enum or integer
+    printf("Person State: %d\n", citizen.personState);  // Assuming PersonState is an enum or integer
+
+    printf("Religion: %s\n", citizen.religion);
+    printf("Father Record ID: %s\n", citizen.fatherRecordID);
+    printf("Mother Record ID: %s\n", citizen.motherRecordID);
+
+    // Printing the date of birth (assuming Date is a struct with day, month, and year)
+    printf("Date of Birth: %d-%d-%d\n", citizen.dateOfBirth.date, citizen.dateOfBirth.month, citizen.dateOfBirth.year);
+
+    // Printing the address (assuming Address is a struct with street, city, etc.)
+    printf("Address: %s\n", citizen.address.street);  // Example field; adjust based on Address definition
+
+    printf("Spouse ID: %s\n", citizen.spouseID);
+}

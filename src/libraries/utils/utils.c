@@ -18,17 +18,6 @@ int calculateCheckDigit(const char *partialID) {
     return sum % 10;
 }
 
-int getMonthIndex(const char *month) {
-    const char *months[] = {"January", "February", "March", "April", "May", "June",
-                            "July", "August", "September", "October", "November", "December"};
-    for (int i = 0; i < 12; i++) {
-        if (strcasecmp(month, months[i]) == 0) {
-            return i + 1;
-        }
-    }
-    return 0;
-}
-
 // Public Functions
 
 void intToChar(char *buffer, int num) {
@@ -40,7 +29,7 @@ void generateCitizenID(char *buffer, Citizen citizenInfo) {
     char dateOfBirth[7]; // ddmmyy format
     snprintf(dateOfBirth, sizeof(dateOfBirth), "%02d%02d%02d",
              citizenInfo.dateOfBirth.date,
-             getMonthIndex(citizenInfo.dateOfBirth.month),  // Assuming month is given in text
+             citizenInfo.dateOfBirth.month,  // Assuming month is given in text
              citizenInfo.dateOfBirth.year % 100);
 
     int firstPart = toupper(citizenInfo.name[0]);

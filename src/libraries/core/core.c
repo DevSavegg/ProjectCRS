@@ -9,17 +9,32 @@ void initialize() {
 
     //puts("Successfully saved data.");
 
-    
-    // int count = 0;
-    // Citizen test[1000];
+    // reportBirth(
+    //     "6971110162228",
+    //     "8670031107227",
+    //     "Naphon",
+    //     MALE,
+    //     "Pussy",
+    //     make_date(
+    //         1,
+    //         12,
+    //         2024
+    //     )
+    // );
 
-    // count = fetchByCitizenID(test, "4000516556060");
+    reportDivorced("7871011224081");
 
-    // for (int i = 0; i < count; i++) {
-    //     puts(test[i].name);
-    //     puts(test[i].surname);
-    //     puts("");
-    // }
+    int count = 0;
+    Citizen test[10];
+
+    count = fetchByName(test, "Naphon");
+
+    for (int i = 0; i < count; i++) {
+        printCitizen(test[i]);
+        puts("");
+    }
+
+    //reportMarriage("7871011224081", "6971110162228");
 }
 
 /*

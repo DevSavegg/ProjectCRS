@@ -1,4 +1,6 @@
 #include "register.h"
+#include "../finder/finder.h"
+#include "../utils/utils.h"
 
 /*
 
@@ -11,46 +13,160 @@ name, surname, id, dateOfBirth, address_id
 // Private Functions //
 
 void concatDate(char *buffer, Date date) {
-    sprintf(buffer, "%d/%s/%d", date.date, date.month, date.year);
+    sprintf(buffer, "%d/%d/%d", date.date, date.month, date.year);
 
     return;
 }
 
 // Library Functions //
 
-// int reportDeceased(char citizenID[14]) {
-//     int count, i, status;
-//     char citizenRecordBuffer[255];
-//     Citizen citizenObjectBuffer;
+int reportBirth(char fatherCitizenID[255], char motherCitizenID[255], char childName[21], Gender gender, char religion[21], Date dateOfBirth) {
+    char id[14];
+
+    Citizen father_citizen_obj;
+    Citizen mother_citizen_obj;
+
+    fetchByCitizenID(&father_citizen_obj, fatherCitizenID);
+    fetchByCitizenID(&mother_citizen_obj, motherCitizenID);
+
+    Citizen child_citizen_obj = make_citizen(
+        childName,
+        father_citizen_obj.surname,
+        "-",
+        gender,
+        SINGLE,
+        ALIVE,
+        religion,
+        fatherCitizenID,
+        motherCitizenID,
+        dateOfBirth,
+        father_citizen_obj.address,
+        "-"
+    );
+
+    generateCitizenID(id, child_citizen_obj);
+    strcpy(child_citizen_obj.citizenID, id);
+
+    Record addressRecord = imake_record("sssss", child_citizen_obj.address.houseNo, child_citizen_obj.address.street, child_citizen_obj.address.city, child_citizen_obj.address.province, child_citizen_obj.address.postcode);
+    ipush(DATA_ADDRESS, addressRecord);
+
+    int addressRecordID = getLastRecordId(DATA_ADDRESS);
+    char dateBuffer[255];
+
+    concatDate(dateBuffer, child_citizen_obj.dateOfBirth);
+    
+    Record childRecord = imake_record("sssdddssssds", 
+        child_citizen_obj.name,
+        child_citizen_obj.surname,
+        child_citizen_obj.citizenID,
+        child_citizen_obj.gender,
+        child_citizen_obj.status,
+        child_citizen_obj.personState,
+        child_citizen_obj.religion,
+        child_citizen_obj.fatherRecordID,
+        child_citizen_obj.motherRecordID,
+        dateBuffer,
+        addressRecordID,
+        child_citizen_obj.spouseID
+    );
+    ipush(DATA_CITIZEN, childRecord);
+
+    return 1;
+}
+
+int reportDeceased(char citizenID[14]) {
+    int count, i, status;
+    char citizenRecordBuffer[255];
+    Citizen citizenObjectBuffer;
  
-//     count = fetchRawRecordID(citizenRecordBuffer, citizenID);
-//     count = fetchByCitizenID(&citizenObjectBuffer, citizenID);
+    count = fetchRawRecordID(citizenRecordBuffer, citizenID);
+    count = fetchByCitizenID(&citizenObjectBuffer, citizenID);
 
-//     if (count <= 0) {
-//         return -1;
-//     }
+    if (count <= 0) {
+        return -1;
+    }
 
-//     if (citizenObjectBuffer.status == MARRIED) {
-//         char tmp[255];
-//         fetchRawRecordID(tmp, citizenObjectBuffer.spouseID);
+    if (citizenObjectBuffer.status == MARRIED) {
+        char tmp[255];
+        fetchRawRecordID(tmp, citizenObjectBuffer.spouseID);
 
-//         update(DATA_CITIZEN, tmp, 11, "-", &status);
-//         update(DATA_CITIZEN, tmp, 4, "3", &status);
-//     }
-//     update(DATA_CITIZEN, citizenRecordBuffer, 5, "1", &status);
-// }
+        update(DATA_CITIZEN, tmp, 11, "-", &status);
+        update(DATA_CITIZEN, tmp, 4, "3", &status);
+    }
+    update(DATA_CITIZEN, citizenRecordBuffer, 5, "1", &status);
 
-Date make_date(int date, char month[11], int year) {
+    return 1;
+}
+
+int reportDisappeared(char citizenID[14]) {
+    int count, i, status;
+    char citizenRecordBuffer[255];
+ 
+    count = fetchRawRecordID(citizenRecordBuffer, citizenID);
+
+    if (count <= 0) {
+        return -1;
+    }
+
+    update(DATA_CITIZEN, citizenRecordBuffer, 5, "2", &status);
+
+    return 1;
+}
+
+int reportMarriage(char groomCitizenID[14], char brideCitizenID[14]) {
+    int status;
+    Citizen groom_citizen_obj;
+    Citizen bride_citizen_obj;
+    char groomRecordBuffer[255];
+    char brideRecordBuffer[255];
+
+    fetchByCitizenID(&groom_citizen_obj, groomCitizenID);
+    fetchByCitizenID(&bride_citizen_obj, brideCitizenID);
+
+    fetchRawRecordID(groomRecordBuffer, groomCitizenID);
+    fetchRawRecordID(brideRecordBuffer, brideCitizenID);
+    
+    update(DATA_CITIZEN, groomRecordBuffer, 4, "1", &status);
+    update(DATA_CITIZEN, brideRecordBuffer, 4, "1", &status);
+
+    update(DATA_CITIZEN, groomRecordBuffer, 11, brideCitizenID, &status);
+    update(DATA_CITIZEN, brideRecordBuffer, 11, groomCitizenID, &status);
+
+    return 1;
+}
+
+int reportDivorced(char citizenID[14]) {
+    int status;
+    Citizen person1_citizen_obj;
+    Citizen person2_citizen_obj;
+    char person1RecordBuffer[255];
+    char person2RecordBuffer[255];
+
+    fetchByCitizenID(&person1_citizen_obj, citizenID);
+    fetchByCitizenID(&person2_citizen_obj, person1_citizen_obj.spouseID);
+
+    if (person1_citizen_obj.status != MARRIED) {
+        return -1;
+    }
+
+    fetchRawRecordID(person1RecordBuffer, person1_citizen_obj.citizenID);
+    fetchRawRecordID(person2RecordBuffer, person2_citizen_obj.citizenID);
+    
+    update(DATA_CITIZEN, person1RecordBuffer, 4, "2", &status);
+    update(DATA_CITIZEN, person2RecordBuffer, 4, "2", &status);
+
+    update(DATA_CITIZEN, person1RecordBuffer, 11, "-", &status);
+    update(DATA_CITIZEN, person2RecordBuffer, 11, "-", &status);
+
+    return 1;
+}
+
+Date make_date(int date, int month, int year) {
     Date date_obj;
     
     date_obj.date = date ? date > 31 || date < 1 ? -1 : date : -1;
+    date_obj.month = month ? month > 12 || month < 1 ? -1 : month : -2;
     date_obj.year = year ? year < 0 ? -1 : year : -1;
-    
-    if (month == NULL || month[0] == '\0') {
-        strcpy(month, "Undefined");
-    }
-
-    strcpy(date_obj.month, month);
 
     return date_obj;
 }
@@ -87,7 +203,7 @@ Address make_address(char houseNo[11], char street[51], char city[51], char prov
     return address_obj;
 }
 
-Citizen make_citizen(char name[21], char surname[21], char citizenID[14], Gender gender, Status status, PersonState personState, char religion[21], char fatherRecordID[255], char motherRecordID[255], Date dateOfBirth, Address address, char spouseID[255]) {
+Citizen make_citizen(char name[21], char surname[21], char citizenID[14], Gender gender, Status status, PersonState personState, char religion[21], char fatherCitizenID[255], char motherCitizenID[255], Date dateOfBirth, Address address, char spouseID[255]) {
     Citizen citizen_obj;
 
     if (name == NULL || name[0] == '\0') {
@@ -106,12 +222,12 @@ Citizen make_citizen(char name[21], char surname[21], char citizenID[14], Gender
         strcpy(religion, "Unknown");
     }
 
-    if (fatherRecordID == NULL || fatherRecordID[0] == '\0') {
-        strcpy(fatherRecordID, "NaN");
+    if (fatherCitizenID == NULL || fatherCitizenID[0] == '\0') {
+        strcpy(fatherCitizenID, "NaN");
     }
 
-    if (motherRecordID == NULL || motherRecordID[0] == '\0') {
-        strcpy(motherRecordID, "NaN");
+    if (motherCitizenID == NULL || motherCitizenID[0] == '\0') {
+        strcpy(motherCitizenID, "NaN");
     }
 
     if (spouseID == NULL || spouseID[0] == '\0') {
@@ -127,8 +243,8 @@ Citizen make_citizen(char name[21], char surname[21], char citizenID[14], Gender
     citizen_obj.personState = personState;
 
     strcpy(citizen_obj.religion, religion);
-    strcpy(citizen_obj.fatherRecordID, fatherRecordID);
-    strcpy(citizen_obj.motherRecordID, motherRecordID);
+    strcpy(citizen_obj.fatherRecordID, fatherCitizenID);
+    strcpy(citizen_obj.motherRecordID, motherCitizenID);
 
     citizen_obj.dateOfBirth = dateOfBirth;
     citizen_obj.address = address;
@@ -189,12 +305,12 @@ void load_citizens_from_csv(const char *filename) {
         char religion[21], fatherRecordID[255], motherRecordID[255];
         char spouseID[255];
         int date, year;
-        char month[11];
+        int month;
         char houseNo[11], street[51], city[51], province[51], postcode[11];
 
-        sscanf(line, "%20[^,],%20[^,],%13[^,],%6[^,],%9[^,],%11[^,],%20[^,],%254[^,],%254[^,],%d,%10[^,],%d,%10[^,],%50[^,],%50[^,],%50[^,],%10[^,],%254[^\n]",
+        sscanf(line, "%20[^,],%20[^,],%13[^,],%6[^,],%9[^,],%11[^,],%20[^,],%254[^,],%254[^,],%d,%d,%d,%10[^,],%50[^,],%50[^,],%50[^,],%10[^,],%254[^\n]",
                name, surname, citizenID, gender_str, status_str, personState_str,
-               religion, fatherRecordID, motherRecordID, &date, month, &year,
+               religion, fatherRecordID, motherRecordID, &date, &month, &year,
                houseNo, street, city, province, postcode, spouseID);
 
         // Map enums

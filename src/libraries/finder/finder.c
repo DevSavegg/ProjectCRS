@@ -62,10 +62,9 @@ int fetchByName(Citizen *buffer, char name[21]) {
         if (status == 2) {
             printf("%s %s\n", recordBuffer[i].data[10], recordBuffer[i].data[0]);
         }
-        int date, year;
-        char month[11];
+        int date, month, year;
 
-        sscanf(recordBuffer[i].data[9], "%d/%s/%d", &date, month, &year);
+        sscanf(recordBuffer[i].data[9], "%d/%d/%d", &date, &month, &year);
 
         buffer[i] = make_citizen(
             recordBuffer[i].data[0],
@@ -123,10 +122,9 @@ int fetchBySurname(Citizen *buffer, char surname[21]) {
         if (status == 2) {
             printf("%s %s\n", recordBuffer[i].data[10], recordBuffer[i].data[0]);
         }
-        int date, year;
-        char month[11];
+        int date, month, year;
 
-        sscanf(recordBuffer[i].data[9], "%d/%s/%d", &date, month, &year);
+        sscanf(recordBuffer[i].data[9], "%d/%d/%d", &date, &month, &year);
 
         buffer[i] = make_citizen(
             recordBuffer[i].data[0],
@@ -185,10 +183,9 @@ int fetchByFullName(Citizen *buffer, char name[21], char surname[21]) {
         if (status == 2) {
             printf("%s %s\n", recordBuffer[i].data[10], recordBuffer[i].data[0]);
         }
-        int date, year;
-        char month[11];
+        int date, month, year;
 
-        sscanf(recordBuffer[i].data[9], "%d/%s/%d", &date, month, &year);
+        sscanf(recordBuffer[i].data[9], "%d/%d/%d", &date, &month, &year);
 
         buffer[i] = make_citizen(
             recordBuffer[i].data[0],
@@ -246,10 +243,9 @@ int fetchByCitizenID(Citizen *buffer, char citizenID[14]) {
         if (status == 2) {
             printf("%s %s\n", recordBuffer[i].data[10], recordBuffer[i].data[0]);
         }
-        int date, year;
-        char month[11];
+        int date, month, year;
 
-        sscanf(recordBuffer[i].data[9], "%d/%s/%d", &date, month, &year);
+        sscanf(recordBuffer[i].data[9], "%d/%d/%d", &date, &month, &year);
 
         buffer[i] = make_citizen(
             recordBuffer[i].data[0],

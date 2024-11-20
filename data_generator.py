@@ -5,7 +5,7 @@ import base64
 
 fake = Faker()
 
-def generate_citizen():
+def generate_citizen(last1, last2):
     """Generate a single citizen record."""
     name = fake.first_name()
     surname = fake.last_name()
@@ -15,7 +15,7 @@ def generate_citizen():
     birth_month = random.randint(1, 12)
     birth_year = random.randint(1950, 2010)
     date_of_birth = f"{birth_day:02d}{birth_month:02d}{birth_year % 100:02d}"
-
+    
     # First 2 digits: ASCII of the first character of name
     first_part = f"{ord(name[0]):02d}"
 
@@ -37,15 +37,27 @@ def generate_citizen():
     fifth_part = str(check_digit)
 
     citizenID = f"{first_part}{second_part}{third_part}{fourth_part}{fifth_part}"
-
+    
+    # Generate additional details
     gender = random.choice(["MALE", "FEMALE"])
-    status = random.choice(["SINGLE"])
+    status = "SINGLE"
     personState = random.choice(["ALIVE", "DECEASED", "DISAPPEARED", "UNKNOWN"])
     religion = random.choice(["Christianity", "Islam", "Hinduism", "Buddhism", "Judaism", "Other"])
-    fatherRecordID = ''.join([str(random.randint(0, 9)) for _ in range(13)])
-    motherRecordID = ''.join([str(random.randint(0, 9)) for _ in range(13)])
-    spouseID = '-'
+    
+    # Assign parent IDs
+    fatherRecordID = last1 if last1 else "0"
+    motherRecordID = last2 if last2 else "0"
+    
+    # Update last1 and last2 for tracking
+    if not last1:
+        last1 = citizenID
+    elif not last2:
+        last2 = citizenID
+    else:
+        last2 = last1
+        last1 = citizenID
 
+    # Generate address
     address = {
         "houseNo": str(random.randint(1, 9999)),
         "street": fake.street_name(),
@@ -53,15 +65,15 @@ def generate_citizen():
         "province": fake.state(),
         "postcode": fake.postcode()
     }
+    birth_details = {"date": birth_day, "month": birth_month, "year": birth_year}
     return (
         name, surname, citizenID, gender, status, personState, religion,
-        fatherRecordID, motherRecordID, {
-            "date": birth_day, "month": birth_month, "year": birth_year
-        }, address, spouseID
+        fatherRecordID, motherRecordID, birth_details, address, "-", last1, last2
     )
 
 def save_citizens_to_csv(filename, count):
     """Generate citizens and save them to a CSV file."""
+    last1, last2 = None, None
     with open(filename, 'w', newline='') as csvfile:
         writer = csv.writer(csvfile)
         writer.writerow([
@@ -71,13 +83,14 @@ def save_citizens_to_csv(filename, count):
         ])
         for _ in range(count):
             (name, surname, citizenID, gender, status, personState, religion,
-             fatherRecordID, motherRecordID, date, address, spouseID) = generate_citizen()
+             fatherRecordID, motherRecordID, birth_details, address, spouseID, 
+             last1, last2) = generate_citizen(last1, last2)
             writer.writerow([
                 name, surname, citizenID, gender, status, personState, religion,
-                fatherRecordID, motherRecordID, date["date"], date["month"], date["year"],
+                fatherRecordID, motherRecordID, birth_details["date"], birth_details["month"], birth_details["year"],
                 address["houseNo"], address["street"], address["city"], address["province"], address["postcode"],
                 spouseID
             ])
 
-# Generate 100 citizens and save to a CSV
-save_citizens_to_csv("citizens.csv", 10000)
+# Generate citizens and save to a CSV
+save_citizens_to_csv("citizens.csv", 1000)
