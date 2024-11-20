@@ -33,6 +33,14 @@ typedef struct {
 
     char citizenID[14];
 
+    char status[21];
+    char personState[21];
+
+    char religion[21];
+    
+    char fatherRecordID[255];
+    char motherRecordID[255];
+
     Date dateOfBirth;
     Address address;
     
@@ -42,7 +50,7 @@ typedef struct {
 #define NULLDATE (Date){-1, "NULL", -1}
 #define NULLADDRESS (Address){"NULL", "NULL", "NULL", "NULL", "NULL"}
 #define NULLCONTACT (Contact){"NULL", "NULL"}
-#define NULLCITIZEN (Citizen){"-", "-", "-", NULLDATE, NULLADDRESS}
+#define NULLCITIZEN (Citizen){"-", "-", "-", "-", "-", "-", "-", "-", NULLDATE, NULLADDRESS}
 
 int registerCitizen(char[21], char[21], char[14], Date, Address, Contact);
 

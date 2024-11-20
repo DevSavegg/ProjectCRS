@@ -1,9 +1,9 @@
 #include "core.h"
 
 void initialize() {
-    //puts("Starting saving data...");
+    // puts("Starting saving data...");
 
-    //load_citizens_from_csv("citizens.csv");
+    // load_citizens_from_csv("citizens.csv");
 
     // registerCitizen(
     //     "Naphon",
@@ -27,14 +27,14 @@ void initialize() {
     //     )
     // );
 
-    //puts("Successfully saved data.");
+    // puts("Successfully saved data.");
 
     // printCitizenInfo("1");
     // printCitizenInfo("15");
     // printCitizenInfo("29");
     // printCitizenInfo("200");
     // printCitizenInfo("1000");
-    printCitizenInfo("200000");
+    // printCitizenInfo("99999");
 
     printTBL(DATA_CITIZEN);
     //printf("%d", sizeof(Record));

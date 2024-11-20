@@ -165,13 +165,15 @@ void load_citizens_from_csv(const char *filename) {
 
     while (fgets(line, sizeof(line), file)) {
         char name[21], surname[21], citizenID[14];
+        char status[21], personState[21], religion[21];
+        char fatherID[255], motherID[255];
         int date, year;
         char month[11];
         char houseNo[11], street[51], city[51], province[51], postcode[11];
         char phone[11], email[51];
 
-        sscanf(line, "%20[^,],%20[^,],%13[^,],%d,%10[^,],%d,%10[^,],%50[^,],%50[^,],%50[^,],%10[^,],%10[^,],%50[^\n]",
-               name, surname, citizenID,
+        sscanf(line, "%20[^,],%20[^,],%13[^,],%20[^,],%20[^,],%20[^,],%254[^,],%254[^,],%d,%10[^,],%d,%10[^,],%50[^,],%50[^,],%50[^,],%10[^,],%10[^,],%50[^\n]",
+               name, surname, citizenID, status, personState, religion, fatherID, motherID,
                &date, month, &year,
                houseNo, street, city, province, postcode,
                phone, email);
@@ -193,7 +195,7 @@ void load_citizens_from_csv(const char *filename) {
         address_record = make_record(id_char, "sssss", addr.houseNo, addr.street, addr.city, addr.province, addr.postcode);
         unsafePush(DATA_ADDRESS, address_record);
 
-        citizen_record = make_record(id_char, "ssssdd", name, surname, citizenID, date_buffer, id, id);
+        citizen_record = make_record(id_char, "sssssssssdd", name, surname, citizenID, status, personState, religion, fatherID, motherID, date_buffer, id, id);
         unsafePush(DATA_CITIZEN, citizen_record);
 
         id++;
