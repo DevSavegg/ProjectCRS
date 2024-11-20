@@ -161,6 +161,18 @@ int reportDivorced(char citizenID[14]) {
     return 1;
 }
 
+int reportChangeName(int what, char citizenID[14], char toChange[50]){
+    char citBuff[255];
+    int status;
+    fetchRawRecordID(citBuff, citizenID);
+    if(what == 1){
+        update(DATA_CITIZEN, citBuff, 0, toChange, &status);
+    }else if(what == 2){
+        update(DATA_CITIZEN, citBuff, 1, toChange, &status);
+    }
+    return 1;
+}
+
 Date make_date(int date, int month, int year) {
     Date date_obj;
     

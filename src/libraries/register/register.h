@@ -68,6 +68,7 @@ int reportDeceased(char citizenID[14]);
 int reportDisappeared(char citizenID[14]);
 int reportMarriage(char groomCitizenID[14], char brideCitizenID[14]);
 int reportDivorced(char citizenID[14]);
+int reportChangeName(int what, char citizenID[14], char toChange[50]);
 
 Date make_date(int date, int month, int year);
 Address make_address(char houseNo[11], char street[51], char city[51], char province[51], char postCode[11]);

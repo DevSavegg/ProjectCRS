@@ -11,7 +11,7 @@
 
 #define bgcl 0
 #define textcl 4 
-#define count 6
+#define count 7
 void Birthscreen();
 void Marriagescreen();
 void Deathscreen();
@@ -19,6 +19,7 @@ void Search();
 void Searchscreen();
 void dissapearscreen();
 void prompt();
+void UpdaterScreen();
 
 void setConsoleColor(int textColor, int bgColor) {
     HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -66,7 +67,11 @@ void menu(int select){
                         printf("\n");
 
     }else printWithBackground("Search\n",0,4);
-  
+    if (abs(select%count) == 6){
+                printWithBackground("Updater",2,4);
+                        printf("\n");
+
+    }else printWithBackground("Updater\n",0,4);
    if (abs(select%count) == 0){
              printWithBackground("Exit",2,4);
                     printf("\n");
@@ -125,6 +130,7 @@ void GUI()//main function
     else if (select%count == 3){Deathscreen();}
     else if (select%count == 4){dissapearscreen();}
     else if (select%count == 5){Searchscreen();} 
+    else if(select%count == 6) UpdaterScreen();
     else system("cls");
 }
     
@@ -168,6 +174,20 @@ void Search(){
     printf("                            \n");
     setConsoleColor(7,0);
 }
+
+void UpdateT(){
+    setConsoleColor(4,0);
+    printf(" _   _           _       _       \n");
+    printf("| | | |         | |     | |      \n");
+    printf("| | | |_ __   __| | __ _| |_ ___ \n");
+    printf("| | | | '_ \\ / _` |/ _` | __/ _ \n");
+    printf("| |_| | |_) | (_| | (_| | ||  __/\n");
+    printf(" \\___/| .__/ \\__,_|\\__,_|\\__\\___|\n");
+    printf("      | |                        \n");
+    printf("      |_|                        \n");
+    setConsoleColor(7,0);
+}
+
 void prompt(char *dest,char question[100],int title){
 
     if (title == 1 )Birth();
@@ -175,6 +195,7 @@ void prompt(char *dest,char question[100],int title){
     if (title == 3 )Death();
     if (title == 4 )Search();
     if (title == 5 )dissapear();
+    if(title == 6) UpdateT();
     char answer[100];
     printf("\n\n");
 printWithBackground(question,0,4);printWithBackground("\n>",0,4);gets(answer);fflush(stdin); system("cls");strcpy(dest,answer);
@@ -226,10 +247,10 @@ void searchMenu(int select){
 
     }else printWithBackground("Search by Name\n",0,4);
     if (abs(select%3) == 0){
-                printWithBackground("Exit",2,4);
+                printWithBackground("Back",2,4);
                         printf("\n");
 
-    }else printWithBackground("Exit", 0, 4);
+    }else printWithBackground("Back", 0, 4);
     printWithBackground("\nUse arrowkey to move and tab to select....",0,4);
     setConsoleColor(7,0);
 }
@@ -251,8 +272,64 @@ int searchSelector(){
 
 void Searchscreen(){
     int select = searchSelector();
-    if (select%count == 1){searchByIDScr();} 
-    else if (select%count == 2){searchByNameScr();}
+    if (select%3 == 1){searchByIDScr();} 
+    else if (select%3 == 2){searchByNameScr();}
+}
+
+
+
+void updateMenu(int select){
+    setConsoleColor(4,0);
+    title();
+    if (abs(select%3) == 1){
+        printWithBackground("Update Name",2,4);
+        printf("\n");
+    }else printWithBackground("Update Name\n",0,4);
+    if (abs(select%3) == 2){
+             printWithBackground("Update Surname",2,4);
+                    printf("\n");
+
+    }else printWithBackground("Update Surname\n",0,4);
+    if (abs(select%3) == 0){
+                printWithBackground("Back",2,4);
+                        printf("\n");
+
+    }else printWithBackground("Back", 0, 4);
+    printWithBackground("\nUse arrowkey to move and tab to select....",0,4);
+    setConsoleColor(7,0);
+}
+
+int updateSelector(){
+    char key;
+    int select = 1;
+    updateMenu(select);
+    while (1) {
+     system("cls");
+     updateMenu(select);
+        key = getch(); // Read the actual key
+        if(key == 'w'){if (select == 0)select = 6;if (select < 0)select++;else select --;}
+        else if (key == 's') {if (select < 0)select--;else select ++;}
+        else if(key == 9 )break;
+        }
+          return abs(select);
+}
+
+void updateNameScr(int what){
+    char id[255];
+    char toChange[50];
+    prompt(id,"Input Person ID",6);
+    prompt(toChange, "Change to >> ", 6);
+    reportChangeName(what, id, toChange);
+    printCitizenInfo(id);
+    printWithBackground("press any key to go back to menu...",bgcl,textcl);getche();
+    GUI();
+}
+
+void UpdaterScreen(){
+    int select = updateSelector();
+    system("cls");
+    if (select%3 == 1){updateNameScr(1);} 
+    else if (select%3 == 2){updateNameScr(2);}
 }
 
 void strtolower(char string[255]){
