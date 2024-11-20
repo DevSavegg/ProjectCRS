@@ -274,6 +274,7 @@ void Searchscreen(){
     int select = searchSelector();
     if (select%3 == 1){searchByIDScr();} 
     else if (select%3 == 2){searchByNameScr();}
+    else GUI();
 }
 
 
@@ -330,6 +331,7 @@ void UpdaterScreen(){
     system("cls");
     if (select%3 == 1){updateNameScr(1);} 
     else if (select%3 == 2){updateNameScr(2);}
+    else GUI();
 }
 
 void strtolower(char string[255]){
