@@ -1,50 +1,24 @@
 #include "core.h"
 
 void initialize() {
-    // puts("Starting saving data...");
+    //puts("Starting saving data...");
 
     //load_citizens_from_csv("citizens.csv");
 
-    // registerCitizen(
-    //     "Naphon",
-    //     "Janggerd",
-    //     "1109945622878",
-    //     make_date(
-    //         1,
-    //         "December",
-    //         2024
-    //     ),
-    //     make_address(
-    //         "10",
-    //         "Prachauthit",
-    //         "Banna",
-    //         "Chaina",
-    //         "30400"
-    //     ),
-    //     make_contact(
-    //         "01234567",
-    //         "thewhalezaza900@gmail.com"
-    //     )
-    // );
+    
 
-    // puts("Successfully saved data.");
+    //puts("Successfully saved data.");
 
-    // printCitizenInfo("1");
-    // printCitizenInfo("15");
-    // printCitizenInfo("29");
-    // printCitizenInfo("200");
-    // printCitizenInfo("1000");
-    printCitizenInfo("44444");
+    
+    // int count = 0;
+    // Citizen test[1000];
 
-    //printTBL(DATA_CITIZEN);
-    //printf("%d", sizeof(Record));
-    //printf("%ld", sizeof(long int));
-    // Citizen nigga[1000];
-    // int n;
-    // n = fetchByCitizenId(nigga, "1109945622878");
+    // count = fetchByCitizenID(test, "4000516556060");
 
-    // for (int i = 0; i < n; i++) {
-    //     puts(nigga[i].surname);
+    // for (int i = 0; i < count; i++) {
+    //     puts(test[i].name);
+    //     puts(test[i].surname);
+    //     puts("");
     // }
 }
 

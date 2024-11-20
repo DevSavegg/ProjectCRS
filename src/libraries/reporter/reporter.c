@@ -2,13 +2,6 @@
 
 // Private Functions
 
-char intToChar(int num) {
-    if (num < 0 || num > 255) {
-        return '\0';
-    }
-    return (char)num;
-}
-
 // Public Functions
 
 void printCitizenInfo(char id[255]) {

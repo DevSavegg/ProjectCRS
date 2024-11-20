@@ -147,6 +147,7 @@ void del(char fileName[255], char id[255], int *status){
     rename("tempFile.tmp", fileName);
     *status = 0;
 }
+
 void update(char fileName[255], char id[255], int dataCol,char data[255], int *status){
     FILE* file = fopen(fileName, "rb");
     FILE* tempFile = fopen("tempFile.tmp", "wb");
