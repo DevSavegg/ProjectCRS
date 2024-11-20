@@ -124,7 +124,10 @@ void GUI()//main function
     else if (select%count == 2){Marriagescreen();}      
     else if (select%count == 3){Deathscreen();}
     else if (select%count == 4){dissapearscreen();}
-    else if (select%count == 5){Searchscreen();} }
+    else if (select%count == 5){Searchscreen();} 
+    else system("cls");
+}
+    
 void Birth(){
     printWithBackground("  ___ _     _   _                            _ \n",0,4);
     printWithBackground(" | _ |_)_ _| |_| |_    _ _ ___ __ ___ _ _ __| |\n",0,4);
@@ -151,9 +154,7 @@ system("cls");
 char lookfor[255];
 prompt(lookfor,"Input ID of a lost person",5);
 reportDisappeared(lookfor);
-Citizen buffer;
-fetchByCitizenID(&buffer,lookfor);
-printCitizen(buffer);
+printCitizenInfo(lookfor);
 printWithBackground("press any key to go back to menu...",bgcl,textcl);getche();
 GUI();}
 
@@ -187,40 +188,73 @@ void Marriage(){
 
 
 }
+void searchByIDScr(){
+    system("cls");
+    char lookfor[255];
+    prompt(lookfor,"Input Person ID",4);
+    setConsoleColor(4,0);
+    printCitizenInfo(lookfor);
+    setConsoleColor(7,0);
+    printWithBackground("press any key to go back to menu...",bgcl,textcl);getche();
+    GUI();
+}
+
+void searchByNameScr(){
+    system("cls");
+    char fName[50], lName[50];
+    prompt(fName,"Input Person Name",4);
+    prompt(lName,"Input Person Surname",4);
+    setConsoleColor(4,0);
+    Citizen cit;
+    fetchByFullName(&cit, fName, lName);
+    printCitizenInfo(cit.citizenID);
+    setConsoleColor(7,0);
+    printWithBackground("press any key to go back to menu...",bgcl,textcl);getche();
+    GUI();
+}
+
+void searchMenu(int select){
+    setConsoleColor(4,0);
+    title();
+    if (abs(select%3) == 1){
+        printWithBackground("Search by ID",2,4);
+        printf("\n");
+    }else printWithBackground("Search by ID\n",0,4);
+    if (abs(select%3) == 2){
+             printWithBackground("Search by Name",2,4);
+                    printf("\n");
+
+    }else printWithBackground("Search by Name\n",0,4);
+    if (abs(select%3) == 0){
+                printWithBackground("Exit",2,4);
+                        printf("\n");
+
+    }else printWithBackground("Exit", 0, 4);
+    printWithBackground("\nUse arrowkey to move and tab to select....",0,4);
+    setConsoleColor(7,0);
+}
+
+int searchSelector(){
+    char key;
+    int select = 1;
+    searchMenu(select);
+    while (1) {
+     system("cls");
+     searchMenu(select);
+        key = getch(); // Read the actual key
+        if(key == 'w'){if (select == 0)select = 6;if (select < 0)select++;else select --;}
+        else if (key == 's') {if (select < 0)select--;else select ++;}
+        else if(key == 9 )break;
+        }
+          return abs(select);
+}
+
 void Searchscreen(){
-system("cls");
-char lookfor[255];
-prompt(lookfor,"Input Person ID",4);
-setConsoleColor(4,0);
-printCitizenInfo(lookfor);
-setConsoleColor(7,0);
-printWithBackground("press any key to go back to menu...",bgcl,textcl);getche();
-GUI();
+    int select = searchSelector();
+    if (select%count == 1){searchByIDScr();} 
+    else if (select%count == 2){searchByNameScr();}
 }
 
-void form(char ID[14],char name[21],char surname[21],char gender[11],char day[3],char month[11],char year[5],char religion[11],char status[11],char state[11],char house[11],char street[51],char city[51],char province[51],char post[11]){
-        printf("+--------------------------------------------------------+\n");
-    printf("|                   Citizen Profile                      |\n");
-    printf("+--------------------------------------------------------+\n");
-    printf("|    Citizen's ID:      %-13s                    |\n", ID);
-    printf("|    Name:   %-10s Surname:   %-10s            |\n",name,surname);
-    printf("|    Gender:      %-19s                    |\n", gender);
-    printf("|                                                        |\n");
-    printf("|    Date of Birth:    %s/%s/%-17s                |\n",day,month,year);
-    printf("|                                                        |\n");
-    printf("|    Religion:    %-22s                 |\n", religion);
-    printf("|                                                        |\n");
-    printf("|    Status:    %-24s                 |\n", status);
-    printf("|    State:    %-25s                 |\n", state);
-    printf("+--------------------------------------------------------+\n");
-    printf("|                       Address                          |\n");
-    printf("+--------------------------------------------------------+\n");
-    printf("|   House No.   %-5s           St. %-20s |\n", house,street);
-    printf("|   City        %-15s                          |\n", city);
-    printf("|   Province    %-15s Post Code   %-5s        |\n", province,post);
-    printf("+--------------------------------------------------------+\n");
-
-}
 void strtolower(char string[255]){
     int i = 0;
     for(; string[i] != '\0'; i++)
@@ -245,16 +279,13 @@ char religion[11]; prompt(religion, "Input Religion", 1);
    if (strcmp(gender,"male")==0)genders = MALE;
    else if (strcmp(gender,"female")==0)genders = FEMALE;
    else {printf("invalid");getch();}
-    Citizen citizen[2];
    char dadid[21];prompt(dadid,"Input Father ID",1);
    char momid[21];prompt(momid,"Input Mother ID",1);
    printf("%s %s %s %d %s %d %d %d",dadid,momid,name,genders,religion,days,months,years);
    reportBirth(dadid,momid,name,genders,religion,make_date(days,months,years));
-   int rer = fetchByName(citizen,name);
-   for (int i = 0; i < rer; i++) {
-        printCitizen(citizen[i]);
-        puts("");}
-    printWithBackground("\n\nRegisterd! press any key to go back to menu...",bgcl,textcl);getch();
+   Citizen buf;
+   fetchByName(&buf, name);
+   printCitizenInfo(buf.citizenID);
   GUI();
 
 }
@@ -309,9 +340,8 @@ void Marriagescreen(){
     char husband[14];prompt(husband,"Input Husband ID",2);
     char wife[14];prompt(wife,"Input Wife ID",2);
     reportMarriage(husband,wife);
-    Citizen buffer;
-    fetchByCitizenID(&buffer,husband);
-    printCitizen(buffer);
+    printCitizenInfo(husband);
+    printCitizenInfo(wife);
     printWithBackground("\n\nCongratulation on the new couple! press any key to go back to menu...",0,4);getche();
 
     GUI();} 

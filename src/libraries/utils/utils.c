@@ -49,3 +49,8 @@ void generateCitizenID(char *buffer, Citizen citizenInfo) {
 
     snprintf(buffer, 14, "%s%d", partialID, checkDigit);
 }
+
+void strMonth(int month, char o[21]){
+    char months[13][21] = {"","January","Febuary", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
+    strcpy(o, months[month]);
+}

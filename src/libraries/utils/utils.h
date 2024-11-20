@@ -11,5 +11,5 @@
 void charToInt(char *buffer, int num);
 
 void generateCitizenID(char *buffer, Citizen citizenInfo);
-
+void strMonth(int month, char o[21]);
 #endif
